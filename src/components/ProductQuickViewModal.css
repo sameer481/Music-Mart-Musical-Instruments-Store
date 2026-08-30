@@ -1,0 +1,25 @@
+/* Product Quick View Modal Styles */
+.quickview-modal-card {
+  background: #0f172a;
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+.quickview-img-frame {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.quickview-audio-btn {
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.35);
+  transition: all 0.25s ease;
+}
+
+.quickview-audio-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.55);
+}

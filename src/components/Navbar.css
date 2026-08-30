@@ -1,0 +1,67 @@
+/* Navbar Component Styles */
+.navbar-container {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(15, 23, 42, 0.92);
+  border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
+  transition: all 0.3s ease;
+}
+
+.navbar-brand-logo {
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.navbar-search-input {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  color: #f8fafc;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: rgba(30, 41, 59, 1);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+.navbar-badge {
+  background: linear-gradient(135deg, #ec4899 0%, #ef4444 100%);
+  box-shadow: 0 2px 6px rgba(236, 72, 153, 0.4);
+  animation: navbarBadgePulse 2s infinite ease-in-out;
+}
+
+@keyframes navbarBadgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.navbar-nav-item {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.navbar-nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #06b6d4, #ec4899);
+  transition: all 0.25s ease;
+  transform: translateX(-50%);
+  border-radius: 999px;
+}
+
+.navbar-nav-item:hover::after {
+  width: 80%;
+}

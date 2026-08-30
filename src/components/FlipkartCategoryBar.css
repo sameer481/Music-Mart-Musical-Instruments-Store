@@ -1,0 +1,19 @@
+/* Flipkart Category Bar Styles */
+.flipkart-cat-wrapper {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+}
+
+.flipkart-cat-card {
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.flipkart-cat-card:hover {
+  transform: translateY(-2px);
+}
+
+.flipkart-cat-card:hover .flipkart-cat-label {
+  color: #2874f0;
+}

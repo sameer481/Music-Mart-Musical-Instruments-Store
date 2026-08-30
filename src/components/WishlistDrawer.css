@@ -1,0 +1,20 @@
+/* Wishlist Drawer Component Styles */
+.wishlist-drawer-panel {
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(51, 65, 85, 0.7);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.wishlist-item-row {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 16px;
+  transition: all 0.2s ease;
+}
+
+.wishlist-item-row:hover {
+  border-color: rgba(236, 72, 153, 0.5);
+  background: rgba(30, 41, 59, 0.8);
+}

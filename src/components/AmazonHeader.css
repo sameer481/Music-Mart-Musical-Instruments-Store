@@ -1,0 +1,40 @@
+/* Amazon Header Styling */
+.amazon-header-root {
+  background-color: #131921;
+  color: #ffffff;
+  border-bottom: 2px solid #febd69;
+}
+
+.amazon-search-container {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 0 2px transparent;
+  transition: box-shadow 0.2s ease;
+}
+
+.amazon-search-container:focus-within {
+  box-shadow: 0 0 0 3px #ff9900;
+}
+
+.amazon-search-btn {
+  background-color: #febd69;
+  color: #111111;
+  transition: background-color 0.2s ease;
+}
+
+.amazon-search-btn:hover {
+  background-color: #f3a847;
+}
+
+.amazon-nav-link {
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  border-radius: 3px;
+  transition: border-color 0.15s ease;
+}
+
+.amazon-nav-link:hover {
+  border-color: #ffffff;
+}

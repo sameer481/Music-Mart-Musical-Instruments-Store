@@ -1,0 +1,26 @@
+/* Flipkart Header Styles */
+.flipkart-header {
+  background-color: #2874f0;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(40, 116, 240, 0.25);
+}
+
+.flipkart-search-box {
+  background-color: #ffffff;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
+}
+
+.flipkart-login-btn {
+  background-color: #ffffff;
+  color: #2874f0;
+  font-weight: 600;
+  padding: 6px 32px;
+  border-radius: 2px;
+  border: 1px solid #dbdbdb;
+  transition: all 0.2s ease;
+}
+
+.flipkart-login-btn:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}

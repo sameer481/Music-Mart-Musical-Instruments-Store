@@ -1,0 +1,19 @@
+/* Fashion Lookbook Section Styles */
+.lookbook-item {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lookbook-item:hover {
+  border-color: rgba(236, 72, 153, 0.6);
+  transform: scale(1.02);
+  box-shadow: 0 12px 30px rgba(236, 72, 153, 0.2);
+}
+
+.lookbook-overlay {
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.3) 60%, transparent 100%);
+  transition: opacity 0.3s ease;
+}
