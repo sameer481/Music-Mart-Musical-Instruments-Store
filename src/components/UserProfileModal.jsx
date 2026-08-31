@@ -150,10 +150,10 @@ export default function UserProfileModal({
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
                     <button
                       onClick={onOpenAdmin}
-                      className="btn-primary py-2.5 px-5 text-xs bg-gradient-to-r from-rose-600 to-purple-600 text-white font-bold rounded-xl shadow-lg flex items-center gap-2"
+                      className="btn-primary py-2.5 px-5 text-xs bg-gradient-to-r from-rose-600 via-purple-600 to-amber-600 text-white font-bold rounded-xl shadow-lg flex items-center gap-2"
                     >
                       <ShieldCheck className="w-4 h-4" />
-                      <span>Open Admin Master Panel</span>
+                      <span>Owner Admin Panel</span>
                     </button>
 
                     <button

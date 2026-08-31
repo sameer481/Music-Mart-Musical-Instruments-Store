@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './AdminPanelModal.css';
-import { X, ShieldCheck, Package, ShoppingBag, Users, DollarSign, Plus, Trash2, Edit, Save, CheckCircle2, TrendingUp, RefreshCw } from 'lucide-react';
+import { X, ShieldCheck, Package, ShoppingBag, Users, DollarSign, Plus, Trash2, Edit, Save, CheckCircle2, TrendingUp, RefreshCw, Lock } from 'lucide-react';
 import { CURRENCIES, DEPARTMENTS } from '../data/products';
 
 export default function AdminPanelModal({
@@ -12,7 +12,8 @@ export default function AdminPanelModal({
   onDeleteProduct,
   orders = [],
   onUpdateOrderStatus,
-  currency = 'USD'
+  currency = 'USD',
+  onLockAdminSession
 }) {
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'products', 'orders'
   
@@ -89,38 +90,54 @@ export default function AdminPanelModal({
             </div>
           </div>
 
-          {/* Admin Navigation Tabs */}
-          <div className="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
-            <button
-              onClick={() => setActiveTab('dashboard')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeTab === 'dashboard'
-                  ? 'bg-purple-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Overview
-            </button>
-            <button
-              onClick={() => setActiveTab('products')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeTab === 'products'
-                  ? 'bg-purple-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Products ({totalProductsCount})
-            </button>
-            <button
-              onClick={() => setActiveTab('orders')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeTab === 'orders'
-                  ? 'bg-purple-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Orders ({totalOrdersCount})
-            </button>
+          {/* Admin Navigation Tabs & Lock Button */}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
+              <button
+                onClick={() => setActiveTab('dashboard')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  activeTab === 'dashboard'
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Overview
+              </button>
+              <button
+                onClick={() => setActiveTab('products')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  activeTab === 'products'
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Products ({totalProductsCount})
+              </button>
+              <button
+                onClick={() => setActiveTab('orders')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  activeTab === 'orders'
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Orders ({totalOrdersCount})
+              </button>
+            </div>
+
+            {onLockAdminSession && (
+              <button
+                onClick={() => {
+                  onLockAdminSession();
+                  onClose();
+                }}
+                className="px-3 py-2 rounded-xl text-xs font-bold bg-rose-950/80 border border-rose-500/40 text-rose-300 hover:bg-rose-900/90 transition-all flex items-center gap-1.5"
+                title="Lock Admin Session & Logout Owner"
+              >
+                <Lock className="w-3.5 h-3.5 text-rose-400" />
+                <span>Lock Session</span>
+              </button>
+            )}
           </div>
         </div>
 

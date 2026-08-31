@@ -20,6 +20,7 @@ import Toast from './components/Toast';
 import OrderTrackingModal from './components/OrderTrackingModal';
 import AdminPanelModal from './components/AdminPanelModal';
 import UserProfileModal from './components/UserProfileModal';
+import AdminAuthModal from './components/AdminAuthModal';
 
 import { PRODUCTS, DEPARTMENTS } from './data/products';
 
@@ -67,7 +68,10 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('home');
 
   // Modal State
-  const [activeModal, setActiveModal] = useState(null); // 'cart', 'checkout', 'wishlist', 'compare', 'virtualStudio', 'quickView', 'tracking', 'admin', 'profile'
+  const [activeModal, setActiveModal] = useState(null); // 'cart', 'checkout', 'wishlist', 'compare', 'virtualStudio', 'quickView', 'tracking', 'admin', 'adminAuth', 'profile'
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    return localStorage.getItem('musicmart_admin_authenticated') === 'true';
+  });
   const [activeTrackingId, setActiveTrackingId] = useState('MM-948201');
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [checkoutSummary, setCheckoutSummary] = useState({
@@ -92,6 +96,28 @@ export default function App() {
 
   const showToast = (toastObj) => {
     setToast(toastObj);
+  };
+
+  // Admin Access & Authentication Handlers
+  const handleOpenAdminPanel = () => {
+    if (isAdminAuthenticated) {
+      setActiveModal('admin');
+    } else {
+      setActiveModal('adminAuth');
+    }
+  };
+
+  const handleAdminAuthenticated = () => {
+    setIsAdminAuthenticated(true);
+    localStorage.setItem('musicmart_admin_authenticated', 'true');
+    setActiveModal('admin');
+    showToast({ title: 'Owner Verified 🔓', message: 'Admin Panel master controls unlocked.' });
+  };
+
+  const handleLockAdminSession = () => {
+    setIsAdminAuthenticated(false);
+    localStorage.removeItem('musicmart_admin_authenticated');
+    showToast({ title: 'Admin Session Locked 🔒', message: 'Owner access signed out.' });
   };
 
   // Product Inventory Admin Handlers
@@ -235,7 +261,7 @@ export default function App() {
         openCompare={() => setActiveModal('compare')}
         openVirtualStudio={() => setActiveModal('virtualStudio')}
         openOrderTracking={() => setActiveModal('tracking')}
-        openAdminPanel={() => setActiveModal('admin')}
+        openAdminPanel={handleOpenAdminPanel}
         openUserProfile={() => setActiveModal('profile')}
         currentUser={currentUser}
         searchQuery={searchQuery}
@@ -367,6 +393,14 @@ export default function App() {
         currency={currency}
       />
 
+      {/* Admin Security Auth Modal */}
+      <AdminAuthModal
+        isOpen={activeModal === 'adminAuth'}
+        onClose={() => setActiveModal(null)}
+        onAuthenticate={handleAdminAuthenticated}
+        ownerEmail={currentUser ? currentUser.email : 'sameer@example.com'}
+      />
+
       {/* Admin Panel Master Modal */}
       <AdminPanelModal
         isOpen={activeModal === 'admin'}
@@ -378,6 +412,7 @@ export default function App() {
         orders={ordersList}
         onUpdateOrderStatus={handleUpdateOrderStatus}
         currency={currency}
+        onLockAdminSession={handleLockAdminSession}
       />
 
       {/* User Profile & Register Modal */}
@@ -392,7 +427,7 @@ export default function App() {
           setActiveTrackingId(id);
           setActiveModal('tracking');
         }}
-        onOpenAdmin={() => setActiveModal('admin')}
+        onOpenAdmin={handleOpenAdminPanel}
         currency={currency}
       />
 

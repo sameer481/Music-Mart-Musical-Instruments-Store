@@ -12,7 +12,8 @@ import {
   Zap,
   Package,
   ShieldCheck,
-  User
+  User,
+  Lock
 } from 'lucide-react';
 import { CURRENCIES, DEPARTMENTS } from '../data/products';
 
@@ -64,9 +65,10 @@ export default function Navbar({
         <button
           onClick={openAdminPanel}
           className="hidden sm:flex items-center gap-1 text-[11px] font-bold text-rose-400 hover:text-rose-300 bg-rose-950/60 border border-rose-500/30 px-2.5 py-0.5 rounded-full"
+          title="Store Owner Admin Control Panel"
         >
-          <ShieldCheck className="w-3 h-3 text-rose-400" />
-          <span>Admin Panel</span>
+          <Lock className="w-3 h-3 text-amber-400" />
+          <span>Owner Admin</span>
         </button>
       </div>
 
@@ -342,8 +344,8 @@ export default function Navbar({
             }}
             className="w-full py-2 bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs font-bold rounded-xl flex items-center justify-center gap-2"
           >
-            <ShieldCheck className="w-4 h-4 text-rose-400" />
-            Open Admin Dashboard
+            <Lock className="w-4 h-4 text-amber-400" />
+            <span>Owner Admin Dashboard</span>
           </button>
 
           <div className="pt-2 border-t border-slate-800">
