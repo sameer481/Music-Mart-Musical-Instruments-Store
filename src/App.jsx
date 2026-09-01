@@ -228,7 +228,11 @@ export default function App() {
     }
   };
 
-  const handleProceedToCheckout = (summaryObj) => {
+  const [checkoutCartItems, setCheckoutCartItems] = useState([]);
+
+  const handleProceedToCheckout = (selectedItems, summaryObj) => {
+    const itemsToPurchase = Array.isArray(selectedItems) && selectedItems.length > 0 ? selectedItems : cart;
+    setCheckoutCartItems(itemsToPurchase);
     setCheckoutSummary(summaryObj);
     setActiveModal('checkout');
   };
@@ -236,8 +240,17 @@ export default function App() {
   const handleOrderPlaced = (newOrderObj) => {
     setOrdersList((prev) => [newOrderObj, ...prev]);
     setActiveTrackingId(newOrderObj.id);
+    
+    // Remove ONLY the purchased items from cart
+    if (newOrderObj.items && newOrderObj.items.length > 0) {
+      const purchasedIds = newOrderObj.items.map((item) => item.id);
+      setCart((prev) => prev.filter((item) => !purchasedIds.includes(item.id)));
+    } else {
+      setCart([]);
+    }
+
     showToast({
-      title: 'UPI Payment Confirmed 🎉',
+      title: 'Payment Confirmed 🎉',
       message: `Order #${newOrderObj.id} is now being processed.`
     });
   };
@@ -377,10 +390,10 @@ export default function App() {
       <CheckoutModal
         isOpen={activeModal === 'checkout'}
         onClose={() => setActiveModal(null)}
-        cartItems={cart}
+        cartItems={checkoutCartItems.length > 0 ? checkoutCartItems : cart}
         summary={checkoutSummary}
         currency={currency}
-        onClearCart={handleClearCart}
+        onClearCart={() => {}}
         onOrderPlaced={handleOrderPlaced}
       />
 

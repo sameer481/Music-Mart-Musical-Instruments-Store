@@ -44,17 +44,33 @@ export default function Navbar({
   const curr = CURRENCIES[currency] || CURRENCIES.USD;
 
   const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    const q = searchQuery.toLowerCase();
-    return products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.brand.toLowerCase().includes(q) ||
-        (p.category && p.category.toLowerCase().includes(q)) ||
-        (p.department && p.department.toLowerCase().includes(q)) ||
-        (p.departmentId && p.departmentId.toLowerCase().includes(q)) ||
-        (p.subcategory && p.subcategory.toLowerCase().includes(q))
-    );
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return [];
+    
+    const results = [];
+    const len = products.length;
+    for (let i = 0; i < len; i++) {
+      const p = products[i];
+      const name = p.name ? p.name.toLowerCase() : '';
+      const brand = p.brand ? p.brand.toLowerCase() : '';
+      const category = p.category ? p.category.toLowerCase() : '';
+      const dept = p.department ? p.department.toLowerCase() : '';
+      const deptId = p.departmentId ? p.departmentId.toLowerCase() : '';
+      const subcategory = p.subcategory ? p.subcategory.toLowerCase() : '';
+
+      if (
+        name.includes(q) ||
+        brand.includes(q) ||
+        category.includes(q) ||
+        dept.includes(q) ||
+        deptId.includes(q) ||
+        subcategory.includes(q)
+      ) {
+        results.push(p);
+        if (results.length >= 12) break;
+      }
+    }
+    return results;
   }, [products, searchQuery]);
 
   const matchingDepts = useMemo(() => {
