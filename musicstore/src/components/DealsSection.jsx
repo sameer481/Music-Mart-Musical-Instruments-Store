@@ -40,7 +40,7 @@ export default function DealsSection({ dealProducts, currency, onAddToCart, onQu
                 </h2>
                 <span className="assured-badge">Flipkart Assured</span>
               </div>
-              <p className="text-xs text-gray-500 font-medium">Extra discounts on top rated musical instruments!</p>
+              <p className="text-xs text-gray-500 font-medium">Extra middle-class family discounts on top rated musical instruments!</p>
             </div>
           </div>
 

@@ -19,7 +19,7 @@ export default function ProductCatalog({
   catalogRef
 }) {
   const [selectedBrands, setSelectedBrands] = useState([]);
-  const [priceRange, setPriceRange] = useState(3000);
+  const [priceRange, setPriceRange] = useState(300);
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState('featured');
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
@@ -64,7 +64,7 @@ export default function ProductCatalog({
   const resetAllFilters = () => {
     setSelectedDepartment('all');
     setSelectedBrands([]);
-    setPriceRange(3000);
+    setPriceRange(300);
     setMinRating(0);
     setSearchQuery('');
     setSortBy('featured');
@@ -196,9 +196,9 @@ export default function ProductCatalog({
                 </div>
                 <input
                   type="range"
-                  min="100"
-                  max="3000"
-                  step="50"
+                  min="15"
+                  max="300"
+                  step="5"
                   value={priceRange}
                   onChange={(e) => setPriceRange(Number(e.target.value))}
                   className="w-full accent-pink-500 cursor-pointer bg-slate-800 h-2 rounded-lg"

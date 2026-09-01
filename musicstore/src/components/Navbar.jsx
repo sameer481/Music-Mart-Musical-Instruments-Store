@@ -51,7 +51,7 @@ export default function Navbar({
       {/* Top Banner */}
       <div className="bg-gradient-to-r from-purple-900/60 via-pink-900/60 to-cyan-900/60 text-xs py-1.5 px-4 text-center border-b border-white/10 flex items-center justify-center gap-2">
         <Sparkles className="w-3.5 h-3.5 text-yellow-400 animate-pulse" />
-        <span>⚡ <strong>FLASH SALE:</strong> Use code <code className="bg-black/30 px-1.5 py-0.5 rounded text-pink-300 font-mono font-bold">MUSIC10</code> for 10% OFF all instruments! Free shipping over $500!</span>
+        <span>🏡 <strong>MIDDLE-CLASS FAMILY SALE:</strong> Budget Friendly Instruments starting at ₹1,499 ($19.99)! Code <code className="bg-black/30 px-1.5 py-0.5 rounded text-pink-300 font-mono font-bold">FAMILY50</code> for Extra 15% OFF!</span>
       </div>
 
       <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
@@ -92,28 +92,82 @@ export default function Navbar({
             )}
           </div>
 
-          {/* Search Dropdown */}
-          {showSearchDropdown && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900/95 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden z-50 backdrop-blur-md">
-              <div className="p-2 text-xs font-semibold uppercase text-slate-400 border-b border-slate-800">
-                Matching Instruments ({searchResults.length})
-              </div>
-              {searchResults.map((p) => (
-                <div
-                  key={p.id}
-                  onClick={() => {
-                    setSearchQuery(p.name);
-                    setShowSearchDropdown(false);
-                  }}
-                  className="flex items-center gap-3 p-2.5 hover:bg-purple-950/40 cursor-pointer transition-colors border-b border-slate-800/40 last:border-0"
-                >
-                  <img src={p.image} alt={p.name} className="w-10 h-10 object-cover rounded-lg" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate text-slate-100">{p.name}</p>
-                    <p className="text-xs text-slate-400">{p.brand} • {CURRENCIES[currency].symbol}{(p.price * CURRENCIES[currency].rate).toFixed(2)}</p>
+          {/* Search Dropdown with Top Instrument Images */}
+          {showSearchDropdown && searchQuery.trim() && searchResults.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900/95 border border-purple-500/40 rounded-2xl shadow-2xl overflow-hidden z-50 backdrop-blur-md p-3 max-h-[85vh] overflow-y-auto space-y-3">
+              
+              {/* TOP INSTRUMENT IMAGES SHOWCASE */}
+              <div>
+                <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-slate-800">
+                  <div className="flex items-center gap-1.5 text-xs font-extrabold text-purple-400 uppercase tracking-wider">
+                    <Sparkles className="w-3.5 h-3.5 text-yellow-400 animate-pulse" />
+                    <span>Top Instrument Images ({searchResults.length})</span>
                   </div>
+                  <span className="text-[10px] text-slate-400 font-semibold">Click photo to view</span>
                 </div>
-              ))}
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {searchResults.slice(0, 6).map((p) => {
+                    const price = p.priceUSD || p.price || 0;
+                    const displayPrice = `${CURRENCIES[currency].symbol}${(price * CURRENCIES[currency].rate).toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
+
+                    return (
+                      <div
+                        key={`musicstore-top-img-${p.id}`}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          setSearchQuery(p.name);
+                          setShowSearchDropdown(false);
+                        }}
+                        className="bg-slate-950/80 border border-slate-800 hover:border-purple-400 p-2 rounded-xl cursor-pointer group transition-all transform hover:-translate-y-0.5 shadow-md flex flex-col items-center relative overflow-hidden"
+                      >
+                        <div className="w-full h-20 rounded-lg bg-slate-900 p-1 flex items-center justify-center overflow-hidden mb-1 relative">
+                          <img
+                            src={p.image}
+                            alt={p.name}
+                            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                          />
+                          <span className="absolute top-1 right-1 bg-purple-600 text-white font-black text-[9px] px-1.5 py-0.5 rounded shadow">
+                            {displayPrice}
+                          </span>
+                        </div>
+                        <p className="text-xs font-bold text-slate-100 group-hover:text-purple-300 line-clamp-1 w-full text-left">
+                          {p.name}
+                        </p>
+                        <div className="flex items-center justify-between w-full text-[10px] text-slate-400 mt-0.5">
+                          <span className="font-semibold">{p.brand}</span>
+                          <span className="text-amber-400 font-bold">★ {p.rating || 4.8}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* LIST MATCHES */}
+              <div>
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 pb-1 border-b border-slate-800 mb-1">
+                  Matching Instruments List
+                </div>
+                {searchResults.slice(0, 5).map((p) => (
+                  <div
+                    key={p.id}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      setSearchQuery(p.name);
+                      setShowSearchDropdown(false);
+                    }}
+                    className="flex items-center gap-3 p-2 hover:bg-purple-950/40 cursor-pointer transition-colors border-b border-slate-800/40 last:border-0 rounded-lg"
+                  >
+                    <img src={p.image} alt={p.name} className="w-9 h-9 object-contain bg-slate-950 rounded-lg shrink-0 p-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold truncate text-slate-100">{p.name}</p>
+                      <p className="text-[11px] text-slate-400">{p.brand} • <span className="text-purple-300 font-bold">{CURRENCIES[currency].symbol}{(p.price * CURRENCIES[currency].rate).toFixed(2)}</span></p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
             </div>
           )}
         </div>

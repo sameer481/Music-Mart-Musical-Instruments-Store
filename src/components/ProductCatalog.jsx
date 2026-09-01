@@ -20,7 +20,7 @@ export default function ProductCatalog({
   catalogRef
 }) {
   const [selectedBrands, setSelectedBrands] = useState([]);
-  const [priceRange, setPriceRange] = useState(5000);
+  const [priceRange, setPriceRange] = useState(300);
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState('featured');
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
@@ -36,12 +36,17 @@ export default function ProductCatalog({
           if (!deptMatch) return false;
         }
         // Search Filter
-        if (
-          searchQuery.trim() &&
-          !p.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-          !p.brand.toLowerCase().includes(searchQuery.toLowerCase())
-        ) {
-          return false;
+        if (searchQuery.trim()) {
+          const q = searchQuery.toLowerCase();
+          const matches =
+            p.name.toLowerCase().includes(q) ||
+            p.brand.toLowerCase().includes(q) ||
+            (p.category && p.category.toLowerCase().includes(q)) ||
+            (p.department && p.department.toLowerCase().includes(q)) ||
+            (p.departmentId && p.departmentId.toLowerCase().includes(q)) ||
+            (p.subcategory && p.subcategory.toLowerCase().includes(q)) ||
+            (p.description && p.description.toLowerCase().includes(q));
+          if (!matches) return false;
         }
         // Brand Filter
         if (selectedBrands.length > 0 && !selectedBrands.includes(p.brand)) return false;
@@ -76,7 +81,7 @@ export default function ProductCatalog({
   const resetAllFilters = () => {
     setSelectedDepartment('all');
     setSelectedBrands([]);
-    setPriceRange(5000);
+    setPriceRange(300);
     setMinRating(0);
     setSearchQuery('');
     setSortBy('featured');
@@ -187,7 +192,7 @@ export default function ProductCatalog({
                   onChange={(e) => setSelectedDepartment(e.target.value)}
                   className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
                 >
-                  <option value="all">All Departments (5,000 Items)</option>
+                  <option value="all">All Departments (5,000 Affordable Items)</option>
                   {DEPARTMENTS.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.name} ({d.count})
@@ -204,9 +209,9 @@ export default function ProductCatalog({
                 </div>
                 <input
                   type="range"
-                  min="100"
-                  max="5000"
-                  step="50"
+                  min="15"
+                  max="300"
+                  step="5"
                   value={priceRange}
                   onChange={(e) => setPriceRange(Number(e.target.value))}
                   className="w-full accent-pink-500 cursor-pointer bg-slate-800 h-2 rounded-lg"

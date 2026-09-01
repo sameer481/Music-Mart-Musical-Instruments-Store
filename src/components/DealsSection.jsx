@@ -41,7 +41,7 @@ export default function DealsSection({ dealProducts, currency, onAddToCart, onQu
                 </h2>
                 <span className="badge font-bold">Assured Quality</span>
               </div>
-              <p className="text-xs text-slate-400 font-medium">Extra discounts on top rated musical instruments!</p>
+              <p className="text-xs text-slate-400 font-medium">Extra middle-class family discounts on top rated musical instruments!</p>
             </div>
           </div>
 
