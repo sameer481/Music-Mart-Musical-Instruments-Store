@@ -138,7 +138,13 @@ export default function Navbar({
             {/* Department Select Dropdown */}
             <select
               value={selectedDepartment}
-              onChange={(e) => setSelectedDepartment(e.target.value)}
+              onChange={(e) => {
+                const deptId = e.target.value;
+                setSelectedDepartment(deptId);
+                if (scrollToCatalog) {
+                  scrollToCatalog();
+                }
+              }}
               className="bg-slate-900 border-r border-slate-800 text-xs font-bold px-3 py-2.5 text-slate-300 outline-none cursor-pointer hover:text-white"
             >
               <option value="all">All Departments</option>
