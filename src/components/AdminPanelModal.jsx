@@ -457,7 +457,7 @@ export default function AdminPanelModal({
   if (!isOpen) return null;
 
   return (
-    <div className="overlay">
+    <div className="overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="bg-slate-900 border border-slate-700/80 rounded-3xl w-full max-w-5xl overflow-hidden shadow-2xl relative max-h-[92vh] flex flex-col">
         
         {/* Close Button */}

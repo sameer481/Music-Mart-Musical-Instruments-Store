@@ -39,7 +39,7 @@ export default function UserProfileModal({
   };
 
   return (
-    <div className="overlay">
+    <div className="overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="bg-slate-900 border border-slate-700/80 rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl relative max-h-[92vh] overflow-y-auto">
         
         {/* Close Button */}

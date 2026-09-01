@@ -34,7 +34,7 @@ export default function AdminAuthModal({
   };
 
   return (
-    <div className="overlay">
+    <div className="overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="bg-slate-900 border border-rose-500/40 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl relative p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200">
         
         {/* Close Button */}
