@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import './ProductQuickViewModal.css';
-import { X, Star, Volume2, ShoppingCart, ShieldCheck, Truck, RotateCcw, Heart, Check } from 'lucide-react';
+import { X, Star, Volume2, ShoppingCart, ShieldCheck, Truck, RotateCcw, Heart, Check, Zap } from 'lucide-react';
 import { CURRENCIES, handleImageError } from '../data/products';
 import { playInstrumentPreview } from '../utils/audioSynth';
 
 export default function ProductQuickViewModal({
+  isOpen,
   product,
   onClose,
   currency,
   onAddToCart,
+  onBuyNow,
   isInWishlist,
   onToggleWishlist
 }) {
   const [selectedFinishIndex, setSelectedFinishIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  if (!product) return null;
+  if (!isOpen || !product) return null;
 
   const curr = CURRENCIES[currency] || CURRENCIES.USD;
 
@@ -29,13 +31,14 @@ export default function ProductQuickViewModal({
   const convertedOriginal = (currentOriginal * curr.rate * quantity).toLocaleString('en-IN', { maximumFractionDigits: 2 });
 
   return (
-    <div className="overlay">
+    <div className="overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="bg-slate-900 border border-slate-700/80 rounded-3xl w-full max-w-4xl overflow-hidden shadow-2xl relative max-h-[90vh] overflow-y-auto">
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 btn-icon bg-slate-950/80 border-slate-700"
+          className="absolute top-4 right-4 z-20 btn-icon bg-slate-950/80 border-slate-700 hover:border-cyan-400 hover:text-cyan-300"
+          title="Close Modal"
         >
           <X className="w-5 h-5" />
         </button>
@@ -100,12 +103,11 @@ export default function ProductQuickViewModal({
                 </span>
               </div>
 
-              <h2 className="text-2xl font-extrabold text-slate-100 font-heading leading-tight">
+              <h2 className="text-2xl font-extrabold text-white font-heading mt-1">
                 {product.name}
               </h2>
-
               {activeFinish && (
-                <p className="text-xs font-bold text-amber-400 mt-1">
+                <p className="text-xs text-amber-400 font-bold mt-0.5">
                   Selected Color: {activeFinish.name} ({currentStock} in stock)
                 </p>
               )}
@@ -128,50 +130,68 @@ export default function ProductQuickViewModal({
               </div>
             </div>
 
-            {/* Price */}
+            {/* Price Showcase */}
             <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-extrabold text-amber-400 font-mono">
+              <span className="text-3xl font-black text-amber-400 font-mono">
                 {curr.symbol}{convertedPrice}
               </span>
               {currentOriginal > currentPrice && (
-                <span className="text-base line-through text-slate-500 font-mono">
+                <span className="text-sm line-through text-slate-500 font-mono">
                   {curr.symbol}{convertedOriginal}
                 </span>
               )}
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed">{product.description}</p>
+            {/* Description */}
+            <p className="text-xs text-slate-300 leading-relaxed">
+              {product.description || 'Professional grade musical instrument crafted for exceptional tone and performance.'}
+            </p>
 
-            {/* Verified Musician Review Snippet */}
-            <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 space-y-1">
-              <div className="flex items-center gap-1 text-emerald-400 font-bold text-[11px]">
+            {/* Verified Musician Review Highlight */}
+            <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
+              <div className="flex items-center gap-1.5 text-emerald-400 font-bold text-[11px]">
                 <Check className="w-3.5 h-3.5" />
                 <span>Verified Musician Review</span>
               </div>
-              <p className="italic text-slate-300 font-medium text-[11px]">
-                "{product.reviewsSnippet || 'Exceptionally crafted instrument with pristine audio dynamics and resonant tone.'}"
+              <p className="text-slate-300 italic text-[11px]">
+                "Exceptionally built {product.brand} instrument with crystal-clear acoustics!"
               </p>
             </div>
 
-            {/* Quantity Selector & Add to Cart */}
+            {/* Quantity Selector & Action Buttons */}
             <div className="space-y-3 pt-2">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center border border-slate-700 rounded-xl bg-slate-950">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="w-9 h-9 font-bold text-slate-300 hover:text-white"
+                    className="w-8 h-8 rounded-lg bg-slate-900 text-slate-300 hover:text-white font-bold"
                   >
                     -
                   </button>
-                  <span className="w-10 text-center font-bold text-sm text-slate-100">{quantity}</span>
+                  <span className="w-10 text-center font-mono font-bold text-sm text-white">
+                    {quantity}
+                  </span>
                   <button
-                    onClick={() => setQuantity((q) => Math.min(currentStock, q + 1))}
-                    className="w-9 h-9 font-bold text-slate-300 hover:text-white"
+                    onClick={() => setQuantity((q) => q + 1)}
+                    className="w-8 h-8 rounded-lg bg-slate-900 text-slate-300 hover:text-white font-bold"
                   >
                     +
                   </button>
                 </div>
 
+                <button
+                  onClick={() => onToggleWishlist(product)}
+                  className={`btn-icon w-11 h-11 ${
+                    isInWishlist ? 'bg-pink-600 text-white' : 'border-slate-700'
+                  }`}
+                  title="Add to Wishlist"
+                >
+                  <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-white' : ''}`} />
+                </button>
+              </div>
+
+              {/* Side-by-Side Action Buttons: Add to Cart & Buy Now (Select Payment) */}
+              <div className="grid grid-cols-2 gap-2 pt-1">
                 <button
                   onClick={() => {
                     for (let i = 0; i < quantity; i++) {
@@ -184,19 +204,29 @@ export default function ProductQuickViewModal({
                     }
                     onClose();
                   }}
-                  className="btn-amazon-cart flex-1 py-3 justify-center text-sm"
+                  className="btn-cart py-3 w-full justify-center text-xs font-bold rounded-xl shadow-md"
                 >
                   <ShoppingCart className="w-4 h-4" />
-                  <span>Add {quantity} to Cart</span>
+                  <span>Add {quantity > 1 ? quantity : ''} to Cart</span>
                 </button>
 
                 <button
-                  onClick={() => onToggleWishlist(product)}
-                  className={`btn-icon w-11 h-11 ${
-                    isInWishlist ? 'bg-pink-600 text-white' : 'border-slate-700'
-                  }`}
+                  onClick={() => {
+                    if (onBuyNow) {
+                      onBuyNow({
+                        ...product,
+                        price: currentPrice,
+                        image: currentImage,
+                        selectedFinish: activeFinish?.name,
+                        quantity
+                      });
+                    }
+                    onClose();
+                  }}
+                  className="btn-buynow py-3 w-full justify-center text-xs font-bold rounded-xl shadow-md flex items-center gap-1.5"
                 >
-                  <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-white' : ''}`} />
+                  <Zap className="w-4 h-4 text-white fill-white" />
+                  <span>Buy Now (Select Payment)</span>
                 </button>
               </div>
             </div>

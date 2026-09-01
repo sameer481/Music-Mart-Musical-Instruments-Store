@@ -4,7 +4,7 @@ import { Zap, Clock, ShoppingCart, Volume2 } from 'lucide-react';
 import { CURRENCIES, handleImageError } from '../data/products';
 import { playInstrumentPreview } from '../utils/audioSynth';
 
-export default function DealsSection({ dealProducts, currency, onAddToCart, onQuickView }) {
+export default function DealsSection({ dealProducts, currency, onAddToCart, onBuyNow, onQuickView }) {
   const [timeLeft, setTimeLeft] = useState({ hours: 14, minutes: 28, seconds: 42 });
 
   useEffect(() => {
@@ -120,9 +120,18 @@ export default function DealsSection({ dealProducts, currency, onAddToCart, onQu
                   </div>
 
                   <div className="flex gap-2 pt-1">
-                    <button onClick={() => onAddToCart(p)} className="btn-flipkart-cart text-[11px] py-1.5 px-3 flex-1">
+                    <button onClick={() => onAddToCart(p)} className="btn-cart text-[11px] py-1.5 px-3 flex-1 justify-center rounded-xl font-bold">
                       <ShoppingCart className="w-3.5 h-3.5" />
                       <span>Add to Cart</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (onBuyNow) onBuyNow(p);
+                        else onAddToCart(p);
+                      }}
+                      className="btn-buynow text-[11px] py-1.5 px-3 flex-1 justify-center rounded-xl font-bold"
+                    >
+                      <span>Buy Now</span>
                     </button>
                   </div>
                 </div>

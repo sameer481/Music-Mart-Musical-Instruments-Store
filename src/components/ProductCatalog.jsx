@@ -12,6 +12,7 @@ export default function ProductCatalog({
   setSearchQuery,
   currency,
   onAddToCart,
+  onBuyNow,
   onQuickView,
   wishlistIds,
   onToggleWishlist,
@@ -20,7 +21,7 @@ export default function ProductCatalog({
   catalogRef
 }) {
   const [selectedBrands, setSelectedBrands] = useState([]);
-  const [priceRange, setPriceRange] = useState(300);
+  const [priceRange, setPriceRange] = useState(5000);
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState('featured');
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
@@ -81,7 +82,7 @@ export default function ProductCatalog({
   const resetAllFilters = () => {
     setSelectedDepartment('all');
     setSelectedBrands([]);
-    setPriceRange(300);
+    setPriceRange(5000);
     setMinRating(0);
     setSearchQuery('');
     setSortBy('featured');
@@ -210,8 +211,8 @@ export default function ProductCatalog({
                 <input
                   type="range"
                   min="15"
-                  max="300"
-                  step="5"
+                  max="5000"
+                  step="25"
                   value={priceRange}
                   onChange={(e) => setPriceRange(Number(e.target.value))}
                   className="w-full accent-pink-500 cursor-pointer bg-slate-800 h-2 rounded-lg"
@@ -282,6 +283,7 @@ export default function ProductCatalog({
                       product={product}
                       currency={currency}
                       onAddToCart={onAddToCart}
+                      onBuyNow={onBuyNow}
                       onQuickView={onQuickView}
                       isInWishlist={wishlistIds.includes(product.id)}
                       onToggleWishlist={onToggleWishlist}

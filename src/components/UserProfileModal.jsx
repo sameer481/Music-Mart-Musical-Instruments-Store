@@ -149,7 +149,10 @@ export default function UserProfileModal({
                   {/* Actions & Admin Launcher */}
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
                     <button
-                      onClick={onOpenAdmin}
+                      onClick={() => {
+                        onOpenAdmin();
+                        onClose();
+                      }}
                       className="btn-primary py-2.5 px-5 text-xs bg-gradient-to-r from-rose-600 via-purple-600 to-amber-600 text-white font-bold rounded-xl shadow-lg flex items-center gap-2"
                     >
                       <ShieldCheck className="w-4 h-4" />

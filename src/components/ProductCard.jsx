@@ -8,6 +8,7 @@ export default function ProductCard({
   product,
   currency,
   onAddToCart,
+  onBuyNow,
   onQuickView,
   isInWishlist,
   onToggleWishlist
@@ -26,7 +27,7 @@ export default function ProductCard({
 
   const convertedPrice = (currentPrice * curr.rate).toFixed(2);
   const convertedOriginal = (currentOriginal * curr.rate).toFixed(2);
-  const discountPercent = Math.round(((currentOriginal - currentPrice) / currentOriginal) * 100);
+  const discountPercent = currentOriginal > currentPrice ? Math.round(((currentOriginal - currentPrice) / currentOriginal) * 100) : 0;
 
   const handlePlayDemo = (e) => {
     e.stopPropagation();
@@ -197,16 +198,25 @@ export default function ProductCard({
 
           <button
             onClick={() => {
-              onAddToCart({
-                ...product,
-                price: currentPrice,
-                image: currentImage,
-                selectedFinish: activeFinish?.name
-              });
-              onQuickView({ ...product, selectedFinish: activeFinish });
+              if (onBuyNow) {
+                onBuyNow({
+                  ...product,
+                  price: currentPrice,
+                  image: currentImage,
+                  selectedFinish: activeFinish?.name
+                });
+              } else {
+                onAddToCart({
+                  ...product,
+                  price: currentPrice,
+                  image: currentImage,
+                  selectedFinish: activeFinish?.name
+                });
+              }
             }}
-            className="btn-buynow text-xs py-2.5 w-full justify-center rounded-xl font-bold shadow-sm"
+            className="btn-buynow text-xs py-2.5 w-full justify-center rounded-xl font-bold shadow-sm flex items-center gap-1"
           >
+            <Zap className="w-3.5 h-3.5 text-white fill-white" />
             <span>Buy Now</span>
           </button>
         </div>

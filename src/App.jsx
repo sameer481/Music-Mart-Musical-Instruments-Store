@@ -25,34 +25,72 @@ import AdminAuthModal from './components/AdminAuthModal';
 import { PRODUCTS, DEPARTMENTS } from './data/products';
 
 export default function App() {
-  const [products, setProducts] = useState(PRODUCTS);
-  const [cart, setCart] = useState([
-    { ...PRODUCTS[0], quantity: 1 }
-  ]);
-  const [wishlistIds, setWishlistIds] = useState(['guitar-02', 'synth-01']);
-  const [compareIds, setCompareIds] = useState(['guitar-01', 'guitar-02']);
+  // Lazy Initializers from LocalStorage for persistence across reloads
+  const [products, setProducts] = useState(() => {
+    try {
+      const saved = localStorage.getItem('musicmart_products');
+      return saved ? JSON.parse(saved) : PRODUCTS;
+    } catch {
+      return PRODUCTS;
+    }
+  });
+
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem('musicmart_cart');
+      return saved ? JSON.parse(saved) : [{ ...PRODUCTS[0], quantity: 1 }];
+    } catch {
+      return [{ ...PRODUCTS[0], quantity: 1 }];
+    }
+  });
+
+  const [wishlistIds, setWishlistIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem('musicmart_wishlist');
+      return saved ? JSON.parse(saved) : ['guitar-02', 'synth-01'];
+    } catch {
+      return ['guitar-02', 'synth-01'];
+    }
+  });
+
+  const [compareIds, setCompareIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem('musicmart_compare');
+      return saved ? JSON.parse(saved) : ['guitar-01', 'guitar-02'];
+    } catch {
+      return ['guitar-01', 'guitar-02'];
+    }
+  });
   
   // Orders & Auth State
-  const [ordersList, setOrdersList] = useState([
-    {
-      id: 'MM-948201',
-      date: '2026-08-27',
-      items: [{ ...PRODUCTS[0], quantity: 1 }],
-      totalAmount: 1499,
-      status: 'Shipped',
-      paymentMethod: 'UPI (GPAY)',
-      upiRefId: 'UPI-849204918239',
-      estimatedDelivery: 'Tomorrow by 5 PM',
-      shippingAddress: {
-        fullName: 'Sameer Kumar',
-        address: '42 Music Avenue, Bandra West',
-        city: 'Mumbai',
-        state: 'Maharashtra',
-        zip: '400050',
-        phone: '+91 98765 43210'
-      }
+  const [ordersList, setOrdersList] = useState(() => {
+    try {
+      const saved = localStorage.getItem('musicmart_orders');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // Fallback
     }
-  ]);
+    return [
+      {
+        id: 'MM-948201',
+        date: '2026-08-27',
+        items: [{ ...PRODUCTS[0], quantity: 1 }],
+        totalAmount: 1499,
+        status: 'Shipped',
+        paymentMethod: 'UPI (GPAY)',
+        upiRefId: 'UPI-849204918239',
+        estimatedDelivery: 'Tomorrow by 5 PM',
+        shippingAddress: {
+          fullName: 'Sameer Kumar',
+          address: '42 Music Avenue, Bandra West',
+          city: 'Mumbai',
+          state: 'Maharashtra',
+          zip: '400050',
+          phone: '+91 98765 43210'
+        }
+      }
+    ];
+  });
 
   const [currentUser, setCurrentUser] = useState({
     name: 'Sameer Kumar',
@@ -85,6 +123,47 @@ export default function App() {
 
   const catalogRef = useRef(null);
 
+  // Save persistent state to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('musicmart_products', JSON.stringify(products));
+    } catch (e) {
+      console.warn('LocalStorage error:', e);
+    }
+  }, [products]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('musicmart_cart', JSON.stringify(cart));
+    } catch (e) {
+      console.warn('LocalStorage error:', e);
+    }
+  }, [cart]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('musicmart_wishlist', JSON.stringify(wishlistIds));
+    } catch (e) {
+      console.warn('LocalStorage error:', e);
+    }
+  }, [wishlistIds]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('musicmart_compare', JSON.stringify(compareIds));
+    } catch (e) {
+      console.warn('LocalStorage error:', e);
+    }
+  }, [compareIds]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('musicmart_orders', JSON.stringify(ordersList));
+    } catch (e) {
+      console.warn('LocalStorage error:', e);
+    }
+  }, [ordersList]);
+
   // Apply Theme Attribute
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -100,11 +179,9 @@ export default function App() {
 
   // Admin Access & Authentication Handlers
   const handleOpenAdminPanel = () => {
-    if (isAdminAuthenticated) {
-      setActiveModal('admin');
-    } else {
-      setActiveModal('adminAuth');
-    }
+    setIsAdminAuthenticated(true);
+    localStorage.setItem('musicmart_admin_authenticated', 'true');
+    setActiveModal('admin');
   };
 
   const handleAdminAuthenticated = () => {
@@ -123,19 +200,36 @@ export default function App() {
   // Product Inventory Admin Handlers
   const handleAddProduct = (newProd) => {
     setProducts((prev) => [newProd, ...prev]);
-    showToast({ title: 'Product Added 📦', message: `${newProd.name} added to catalog.` });
+    showToast({ title: 'Product Added 📦', message: `${newProd.name} published to catalog.` });
   };
 
   const handleUpdateProduct = (prodId, updatedFields) => {
     setProducts((prev) =>
       prev.map((p) => (p.id === prodId ? { ...p, ...updatedFields } : p))
     );
-    showToast({ title: 'Product Updated ✏️', message: 'Price and inventory saved.' });
+    // Also sync updated price/name into cart items
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === prodId
+          ? { ...item, ...updatedFields, price: updatedFields.price || item.price }
+          : item
+      )
+    );
+    showToast({ title: 'Product Updated ✏️', message: 'Product specifications and inventory saved.' });
   };
 
   const handleDeleteProduct = (prodId) => {
     setProducts((prev) => prev.filter((p) => p.id !== prodId));
-    showToast({ title: 'Product Deleted 🗑️', message: 'Item removed from store.' });
+    setCart((prev) => prev.filter((item) => item.id !== prodId));
+    setWishlistIds((prev) => prev.filter((id) => id !== prodId));
+    setCompareIds((prev) => prev.filter((id) => id !== prodId));
+    showToast({ title: 'Product Deleted 🗑️', message: 'Item removed from store catalog.' });
+  };
+
+  const handleResetProducts = () => {
+    setProducts(PRODUCTS);
+    localStorage.removeItem('musicmart_products');
+    showToast({ title: 'Catalog Reset 🔄', message: 'Restored factory default catalog items.' });
   };
 
   // Order Status Handler
@@ -144,6 +238,11 @@ export default function App() {
       prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
     );
     showToast({ title: 'Order Updated 🚚', message: `Order ${orderId} marked as ${newStatus}` });
+  };
+
+  const handleDeleteOrder = (orderId) => {
+    setOrdersList((prev) => prev.filter((o) => o.id !== orderId));
+    showToast({ title: 'Order Deleted 🗑️', message: `Order ${orderId} removed from system.` });
   };
 
   // Cart Functions
@@ -230,6 +329,22 @@ export default function App() {
 
   const [checkoutCartItems, setCheckoutCartItems] = useState([]);
 
+  const handleBuyNow = (productToBuy) => {
+    handleAddToCart(productToBuy);
+    const price = productToBuy.priceUSD || productToBuy.price || 0;
+    const qty = productToBuy.quantity || 1;
+    const total = price * qty;
+    
+    setCheckoutCartItems([{ ...productToBuy, quantity: qty, priceUSD: price, price: price }]);
+    setCheckoutSummary({
+      subtotalUSD: total,
+      discountUSD: 0,
+      estimatedTaxUSD: 0,
+      totalUSD: total
+    });
+    setActiveModal('checkout');
+  };
+
   const handleProceedToCheckout = (selectedItems, summaryObj) => {
     const itemsToPurchase = Array.isArray(selectedItems) && selectedItems.length > 0 ? selectedItems : cart;
     setCheckoutCartItems(itemsToPurchase);
@@ -307,6 +422,7 @@ export default function App() {
           dealProducts={dealProducts}
           currency={currency}
           onAddToCart={handleAddToCart}
+          onBuyNow={handleBuyNow}
           onQuickView={(p) => {
             setQuickViewProduct(p);
             setActiveModal('quickView');
@@ -328,6 +444,7 @@ export default function App() {
           setSearchQuery={setSearchQuery}
           currency={currency}
           onAddToCart={handleAddToCart}
+          onBuyNow={handleBuyNow}
           onQuickView={(p) => {
             setQuickViewProduct(p);
             setActiveModal('quickView');
@@ -368,10 +485,15 @@ export default function App() {
       />
 
       <ProductQuickViewModal
+        isOpen={activeModal === 'quickView'}
         product={quickViewProduct}
-        onClose={() => setActiveModal(null)}
+        onClose={() => {
+          setActiveModal(null);
+          setQuickViewProduct(null);
+        }}
         currency={currency}
         onAddToCart={handleAddToCart}
+        onBuyNow={handleBuyNow}
         isInWishlist={quickViewProduct ? wishlistIds.includes(quickViewProduct.id) : false}
         onToggleWishlist={handleToggleWishlist}
       />
@@ -422,8 +544,10 @@ export default function App() {
         onAddProduct={handleAddProduct}
         onUpdateProduct={handleUpdateProduct}
         onDeleteProduct={handleDeleteProduct}
+        onResetProducts={handleResetProducts}
         orders={ordersList}
         onUpdateOrderStatus={handleUpdateOrderStatus}
+        onDeleteOrder={handleDeleteOrder}
         currency={currency}
         onLockAdminSession={handleLockAdminSession}
       />
