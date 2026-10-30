@@ -1,0 +1,71 @@
+<!-- Sample HTML Tables -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sample Tables</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; margin-bottom: 2rem; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .striped tbody tr:nth-child(even) { background-color: #fafafa; }
+  </style>
+</head>
+<body>
+  <h2>Basic Table</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>City</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Alice</td>
+        <td>28</td>
+        <td>New York</td>
+      </tr>
+      <tr>
+        <td>Bob</td>
+        <td>34</td>
+        <td>San Francisco</td>
+      </tr>
+      <tr>
+        <td>Charlie</td>
+        <td>22</td>
+        <td>London</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Striped Table with Header Highlight</h2>
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>In Stock</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Apple iPhone 15</td>
+        <td>$799</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>Samsung Galaxy S24</td>
+        <td>$749</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>Google Pixel 8</td>
+        <td>$699</td>
+        <td>Yes</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>
